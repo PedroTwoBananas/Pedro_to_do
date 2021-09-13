@@ -5,18 +5,29 @@
     <title>Регистрация</title>
 </head>
 <body>
-    <h1>Регистрация</h1>
-    <form>
-        <input class = "email" type="text"><p class = "update-email">Email</p>
+    <div class = "registration-section">
+    <h2 class = "registration-title">Регистрация</h2>
+    <form class = "registration-form" novalidate>
         
-        <input class = "password" type="password"><p class = "update-password">Пароль</p>
+        <input class = "email" type="email">
+        <span class = "email-title">Email</span>
+        <div class = "pop-up-email">
+            <span class = "update-email"></span>
+        </div>
         
-        <input class = "username" type="text"><p class = "user-name">Имя Пользователя</p>
+        <input class = "password" type="password">
+        <span class = "password-title">Пароль</span>
+        <input class = "show-password" type = "checkbox">
+        <div class = "pop-up-password">
+          <span class = "update-password"></span>
+        </div>
+        <input class = "username" type="text"><span>Имя Пользователя</span><span class = "update-username"></span>
         
-        <input class = "submit-button" type="submit" value = "Зарегистрироваться">
+        <input class = "submit-button" type="button" value = "Зарегистрироваться">
     </form>
-    <a href = "">На Главную</a>
+    <a href = "../index.html">На Главную</a>
     <script src = "reg.js"></script>
+    </div>
 </body>
 
 </html>

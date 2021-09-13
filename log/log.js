@@ -39,6 +39,8 @@ const passwordUpdate = document.querySelector('.update-password');
 let isValidPassword = false;
 let showPassword = document.querySelector('.show-password');
 
+
+
 showPassword.onchange = function () {
   if (showPassword.checked) {
     password.type = 'text';
@@ -77,31 +79,26 @@ function mouseoutPassword(e) {
   passwordUpdate.textContent = '';
 }
 
-const userName = document.querySelector('.username');
-
-
-
-const submitButton = document.querySelector('.submit-button');
-submitButton.disabled = true;
+const loginButton = document.querySelector('.login-button');
+loginButton.disabled = true;
 
 let validCheck = function () {
   if (isValidEmail === true && isValidPassword === true) {
-    submitButton.disabled = false;
+    loginButton.disabled = false;
     } else {
-    submitButton.disabled = true;
+      loginButton.disabled = true;
     }
 };
 
 const host = 'https://apipedrotodo.herokuapp.com'; 
 
-submitButton.onclick = function () {
+loginButton.onclick = function () {
   let user = {
     "email": email.value,
-    "password": password.value,
-    "username": userName.value
+    "password": password.value
   };
 
-    fetch(host + '/auth/register', {
+    fetch(host + '/auth/login', {
     method: 'POST',
     headers: {
       'Content-Type' : 'application/json;charset=utf-8',
@@ -113,32 +110,8 @@ submitButton.onclick = function () {
       response.json()
       .then(
         saveLocal => {
-          localStorage.setItem('reg_user_name', JSON.stringify(saveLocal))})
-          .then(() => document.location.href = "../log/log.html") 
+          localStorage.setItem('log_user_name', JSON.stringify(saveLocal))})
+          .then(() => document.location.href = "../index.html")  
   }).catch(
       error => console.error(error)
-    )}  
- 
-
-
-
-
-// {
-//   "email": "paradaigor20@gmail.com",
-//   "user_name": "Pedro",
-//   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Mjk2NTEwNDgsInVzZXJJRCI6MTB9.o5v2-eO0iYwWbgPssYTHQSkyWPgNC18AoW7Rbr_WoEQ",
-//   "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzE3MjQ2NDgsInVzZXJJRCI6MTB9.LbSMg-yaRfwOYUdrQN9LFlS04dZ4ipQ_P3F8moMDyNg",
-//   "id": 10
-// }
-
-
-
-// response => {return response.json().then(data => {console.log(typeof data); console.log(data)})}
-// ).then(
-//     saveLocal => {localStorage.setItem('saveLocal', saveLocal); console.log(saveLocal)}
-// ).catch(
-//     error => console.error(error)
-// );
-// };
-
-
+    )}
