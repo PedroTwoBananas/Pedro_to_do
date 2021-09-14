@@ -58,23 +58,75 @@ fetch(host + '/api/getTasks', {
       const doneButton = document.createElement('button');
       doneButton.setAttribute('id', serverArray[i].id);
       doneButton.textContent = 'Готово';
-    //   doneButton.onclick = function () {
-    // }
+      doneButton.onclick = function () {
+        console.log('done');
+    }
       taskBlock.append(doneButton);
 
       const editButton = document.createElement('button');
       editButton.setAttribute('id', serverArray[i].id);
       editButton.textContent = 'Редактировать';
       taskBlock.append(editButton);
+      editButton.onclick = function () {
+        modalEdit.style.display = "block";
+        
+        editTaskNameValue.value = serverArray[i].task_title;
+        editTaskDescriptionValue.value = serverArray[i].task_desc;
 
-      
-
+        modalEditTaskButton.onclick = function () {
+          let editEndtimeDate = editTaskEndtime.value;
+          console.log(editEndtimeDate);
+          editEndtimeDate = editEndtimeDate.split('-');
+          console.log(editEndtimeDate);
+          let editManyNumbers = new Date(editEndtimeDate);
+          console.log(editManyNumbers);
+          console.log(editManyNumbers.getTime());
+  
+          let editObject = {
+              "end_time": editManyNumbers.getTime(),
+              "is_done": false,
+              "task_desc": editTaskDescriptionValue.value,
+              "task_title": editTaskNameValue.value
+          }
+          console.log(editObject);
+          fetch(host + '/api/editTask?id=' + serverArray[i].id, {
+              method: 'PUT',
+              headers: {
+                'Authorization' : 'Bearer ' + JSON.parse(localStorage['log_user_name']).access_token
+              },
+              body: JSON.stringify(editObject)
+            }).then(
+              response => {
+                return response.json()  
+            }).then(
+                response => {
+                  // serverID = response.id;
+                  taskBlock.setAttribute('id', response.id);
+                  taskNameText.setAttribute('id', response.id);
+                  taskDescriptionText.setAttribute('id', response.id);
+                  taskEndtimeText.setAttribute('id', response.id);
+                  doneButton.setAttribute('id', response.id);
+                  editButton.setAttribute('id', response.id);
+                  deleteButton.setAttribute('id', response.id);
+                  taskNameText.textContent = response.task_title;
+                  taskDescriptionText.textContent = response.task_desc;
+                  // taskEndtimeText.textContent = response.end_time;
+                  taskEndtimeText.textContent = ("" + new Date(response.end_time).toISOString())
+                  .replace(/^([^T]+)T(.+)$/,'$1')
+                  .replace(/^(\d+)-(\d+)-(\d+)$/,'$3.$2.$1');
+  
+            }).catch(
+                error => console.error(error)
+              )
+        };
+      };
 
       const deleteButton = document.createElement('button');
       deleteButton.setAttribute('id', serverArray[i].id);
       deleteButton.textContent = 'Удалить';
       taskBlock.append(deleteButton);
       deleteButton.onclick = function () {
+        console.log('delete');
         fetch(host + '/api/deleteTask?id=' + serverArray[i].id, {
             method: 'DELETE',
             headers: {
@@ -103,6 +155,7 @@ fetch(host + '/api/getTasks', {
 
 
 const modal = document.querySelector('.modal'); // модальное окно при создании задачи
+const modalEditTaskButton = document.querySelector(".modal-edit-task-button"); // модальная кнопка редактирования задачи
 const addTaskButton = document.querySelector(".add-task-button"); // кнопка, вызывающее модальное окно добавления задачи
 addTaskButton.onclick = function() {
     modal.style.display = "block";
@@ -151,7 +204,7 @@ modalAddTaskButton.onclick = function () {
       editTaskDescriptionValue.value = taskDescriptionText.textContent;
     //   editTaskEndtime.value = taskEndtime.textContent;
       
-      const modalEditTaskButton = document.querySelector(".modal-edit-task-button"); // модальная кнопка редактирования задачи
+      
       modalEditTaskButton.onclick = function () {
         let editEndtimeDate = editTaskEndtime.value;
         console.log(editEndtimeDate);
