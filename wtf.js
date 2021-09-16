@@ -76,14 +76,14 @@ fetch(host + '/api/getTasks', {
         modalEditTaskButton.onclick = function () {
           let editEndtimeDate = editTaskEndtime.value;
           console.log(editEndtimeDate);
-          editEndtimeDate = editEndtimeDate.split('-');
+          // editEndtimeDate = editEndtimeDate.split('-');
           console.log(editEndtimeDate);
           let editManyNumbers = new Date(editEndtimeDate);
           console.log(editManyNumbers);
           console.log(editManyNumbers.getTime());
   
           let editObject = {
-              "end_time": editManyNumbers.getTime(),
+              "end_time": editManyNumbers.getTime() / 1000,
               "is_done": false,
               "task_desc": editTaskDescriptionValue.value,
               "task_title": editTaskNameValue.value
@@ -111,7 +111,7 @@ fetch(host + '/api/getTasks', {
                   taskNameText.textContent = response.task_title;
                   taskDescriptionText.textContent = response.task_desc;
                   // taskEndtimeText.textContent = response.end_time;
-                  taskEndtimeText.textContent = ("" + new Date(response.end_time).toISOString())
+                  taskEndtimeText.textContent = ("" + new Date(response.end_time * 1000).toISOString())
                   .replace(/^([^T]+)T(.+)$/,'$1')
                   .replace(/^(\d+)-(\d+)-(\d+)$/,'$3.$2.$1');
   
@@ -144,7 +144,7 @@ fetch(host + '/api/getTasks', {
     }
       taskNameText.textContent = serverArray[i].task_title;
       taskDescriptionText.textContent = serverArray[i].task_desc;
-      taskEndtimeText.textContent = ("" + new Date(serverArray[i].end_time).toISOString())
+      taskEndtimeText.textContent = ("" + new Date(serverArray[i].end_time * 1000).toISOString())
         .replace(/^([^T]+)T(.+)$/,'$1')
         .replace(/^(\d+)-(\d+)-(\d+)$/,'$3.$2.$1');
     }
@@ -208,7 +208,7 @@ modalAddTaskButton.onclick = function () {
       modalEditTaskButton.onclick = function () {
         let editEndtimeDate = editTaskEndtime.value;
         console.log(editEndtimeDate);
-        editEndtimeDate = editEndtimeDate.split('-');
+        // editEndtimeDate = editEndtimeDate.split('-');
         console.log(editEndtimeDate);
         let editManyNumbers = new Date(editEndtimeDate);
         console.log(editManyNumbers);
@@ -273,7 +273,7 @@ modalAddTaskButton.onclick = function () {
         taskList.removeChild(taskBlock);
     }
 
-    taskObject.end_time = manyNumbers.getTime();
+    taskObject.end_time = (manyNumbers.getTime() / 1000);
     taskObject.task_desc = taskDescriptionValue.value;
     taskObject.task_title = taskNameValue.value;
     taskObject.id_user = JSON.parse(localStorage['log_user_name']).id;
@@ -305,7 +305,7 @@ modalAddTaskButton.onclick = function () {
             deleteButton.setAttribute('id', response.id);
             taskNameText.textContent = response.task_title;
             taskDescriptionText.textContent = response.task_desc;
-            taskEndtimeText.textContent = ("" + new Date(response.end_time).toISOString())
+            taskEndtimeText.textContent = ("" + new Date(response.end_time * 1000).toISOString())
             .replace(/^([^T]+)T(.+)$/,'$1')
             .replace(/^(\d+)-(\d+)-(\d+)$/,'$3.$2.$1');
       }).catch(
