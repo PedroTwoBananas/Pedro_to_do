@@ -7,7 +7,7 @@ function parseJwt (token) {
 let nowData = new Date();
 console.log(nowData);
 let nowManyNumbers = nowData.getTime();
-console.log(nowManyNumbers);
+console.log(nowManyNumbers / 1000);
 
 console.log(parseJwt(JSON.parse(localStorage['log_user_name']).access_token));
 console.log(parseJwt(JSON.parse(localStorage['log_user_name']).refresh_token));
@@ -21,6 +21,7 @@ logOutButton.onclick = function () {
     localStorage.clear();
     document.location.href = "title/title.html";
 }
+
 let serverArray;
 
 const host = 'https://apipedrotodo.herokuapp.com';
@@ -32,12 +33,16 @@ fetch(host + '/api/getTasks', {
 })
 .then(response => response.json())
 .then(response => {serverArray = response})
-.then(() =>{ if (serverArray.length > 0) {
+.then(() => console.log(serverArray))
+.then(() => { if (serverArray.length > 0) {
     for (let i = 0; i < serverArray.length; i++) {
       const taskBlock = document.createElement('div');
       taskBlock.setAttribute('id', serverArray[i].id);
       taskBlock.classList.add('task-block');
       taskList.append(taskBlock);
+      // if (serverArray[i].is_done === true) {
+      //   taskBlock.style.backgroundColor = 'SpringGreen';
+      // };
     
       const taskNameText = document.createElement('span');
       taskNameText.setAttribute('id', serverArray[i].id);
@@ -59,8 +64,43 @@ fetch(host + '/api/getTasks', {
       doneButton.setAttribute('id', serverArray[i].id);
       doneButton.textContent = 'Готово';
       doneButton.onclick = function () {
-        console.log('done');
-    }
+        let time = taskEndtimeText.textContent;
+        time = time.split('.').reverse().join('-');
+        // time = time.reverse();
+        // time = time.join('-');
+        let doneManyNumbers = new Date(time);
+        console.log(time);
+          let doneObject = {
+            "end_time": doneManyNumbers.getTime() / 1000,
+            "is_done": true,
+            "task_desc": taskNameText.textContent,
+            "task_title": taskDescriptionText.textContent
+          };
+          console.log(doneObject);
+          fetch(host + '/api/editTask?id=' + serverArray[i].id, {
+            method: 'PUT',
+            headers: {
+              'Authorization' : 'Bearer ' + JSON.parse(localStorage['log_user_name']).access_token
+            },
+            body: JSON.stringify(doneObject)
+          }).then(
+            response => {
+              return response.json()  
+          }).then(response => {
+            if (response.is_done === true && response.end_time < nowManyNumbers / 1000) {
+              taskBlock.style.backgroundColor ='Yellow';
+                  taskBlock.removeChild(doneButton);
+                  taskBlock.removeChild(editButton);
+            } else {
+              taskBlock.style.backgroundColor ='SpringGreen';
+                  taskBlock.removeChild(doneButton);
+                  taskBlock.removeChild(editButton);
+            };
+  
+          }).catch(
+              error => console.error(error)
+            )
+      }
       taskBlock.append(doneButton);
 
       const editButton = document.createElement('button');
@@ -111,9 +151,10 @@ fetch(host + '/api/getTasks', {
                   taskNameText.textContent = response.task_title;
                   taskDescriptionText.textContent = response.task_desc;
                   // taskEndtimeText.textContent = response.end_time;
-                  taskEndtimeText.textContent = ("" + new Date(response.end_time * 1000).toISOString())
-                  .replace(/^([^T]+)T(.+)$/,'$1')
-                  .replace(/^(\d+)-(\d+)-(\d+)$/,'$3.$2.$1');
+                  taskEndtimeText.textContent = new Date(response.end_time * 1000).toLocaleDateString();
+                  // taskEndtimeText.textContent = ("" + new Date(response.end_time * 1000).toISOString())
+                  // .replace(/^([^T]+)T(.+)$/,'$1')
+                  // .replace(/^(\d+)-(\d+)-(\d+)$/,'$3.$2.$1');
   
             }).catch(
                 error => console.error(error)
@@ -142,13 +183,31 @@ fetch(host + '/api/getTasks', {
          
         taskList.removeChild(taskBlock);
     }
+    
+    
+
       taskNameText.textContent = serverArray[i].task_title;
       taskDescriptionText.textContent = serverArray[i].task_desc;
-      taskEndtimeText.textContent = ("" + new Date(serverArray[i].end_time * 1000).toISOString())
-        .replace(/^([^T]+)T(.+)$/,'$1')
-        .replace(/^(\d+)-(\d+)-(\d+)$/,'$3.$2.$1');
+      taskEndtimeText.textContent = new Date(serverArray[i].end_time * 1000).toLocaleDateString();
+      // taskEndtimeText.textContent = ("" + new Date(serverArray[i].end_time * 1000).toISOString())
+      //   .replace(/^([^T]+)T(.+)$/,'$1')
+      //   .replace(/^(\d+)-(\d+)-(\d+)$/,'$3.$2.$1');
+
+      if (serverArray[i].is_done === false && serverArray[i].end_time < nowManyNumbers / 1000) {
+        taskBlock.style.backgroundColor ='Red';
+      } else if (serverArray[i].is_done === true && serverArray[i].end_time < nowManyNumbers / 1000) {
+        taskBlock.style.backgroundColor ='Yellow';
+            taskBlock.removeChild(doneButton);
+            taskBlock.removeChild(editButton);
+      } else if (serverArray[i].is_done === true) {
+        taskBlock.style.backgroundColor ='SpringGreen';
+            taskBlock.removeChild(doneButton);
+            taskBlock.removeChild(editButton);
+      };
     }
-}})
+}
+} 
+)
 .then(() => console.log(serverArray))
 .catch(error => console.error(error));
 
@@ -182,15 +241,56 @@ modalAddTaskButton.onclick = function () {
     const taskEndtimeText = document.createElement('span');
     
     let endtimeDate = taskEndtime.value;
+    console.log(endtimeDate);
     let manyNumbers = new Date(endtimeDate);
+    console.log( '12334 ' + manyNumbers.getTime());
     
     taskBlock.append(taskEndtimeText);
 
     const doneButton = document.createElement('button');
     doneButton.textContent = 'Готово';
-    // doneButton.onclick = function () {
-    //     isDone = true
-    // }
+    doneButton.onclick = function () {
+      let time = taskEndtimeText.textContent;
+      time = time.split('.').reverse().join('-');
+      // time = time.reverse();
+      // time = time.join('-');
+      let doneManyNumbers = new Date(time);
+      console.log(time);
+        let doneObject = {
+            "end_time": doneManyNumbers.getTime() / 1000,
+            "is_done": true,
+            "task_desc": taskNameText.textContent,
+            "task_title": taskDescriptionText.textContent
+        };
+        console.log(doneObject);
+        fetch(host + '/api/editTask?id=' + serverID, {
+          method: 'PUT',
+          headers: {
+            'Authorization' : 'Bearer ' + JSON.parse(localStorage['log_user_name']).access_token
+          },
+          body: JSON.stringify(doneObject)
+        }).then(
+          response => {
+            return response.json()  
+        }).then(response => {
+
+          // taskBlock.style.backgroundColor ='SpringGreen';
+          // taskBlock.removeChild(doneButton);
+          // taskBlock.removeChild(editButton);
+          if (response.is_done === true && response.end_time < nowManyNumbers / 1000) {
+            taskBlock.style.backgroundColor ='Yellow';
+                taskBlock.removeChild(doneButton);
+                taskBlock.removeChild(editButton);
+          } else {
+            taskBlock.style.backgroundColor ='SpringGreen';
+                taskBlock.removeChild(doneButton);
+                taskBlock.removeChild(editButton);
+          };
+
+        }).catch(
+            error => console.error(error)
+          )
+    }
     taskBlock.append(doneButton);
 
     const editButton = document.createElement('button');
@@ -215,7 +315,7 @@ modalAddTaskButton.onclick = function () {
         console.log(editManyNumbers.getTime());
 
         let editObject = {
-            "end_time": editManyNumbers.getTime(),
+            "end_time": editManyNumbers.getTime() / 1000,
             "is_done": false,
             "task_desc": editTaskDescriptionValue.value,
             "task_title": editTaskNameValue.value
@@ -243,9 +343,10 @@ modalAddTaskButton.onclick = function () {
                 taskNameText.textContent = response.task_title;
                 taskDescriptionText.textContent = response.task_desc;
                 // taskEndtimeText.textContent = response.end_time;
-                taskEndtimeText.textContent = ("" + new Date(response.end_time).toISOString())
-                .replace(/^([^T]+)T(.+)$/,'$1')
-                .replace(/^(\d+)-(\d+)-(\d+)$/,'$3.$2.$1');
+                taskEndtimeText.textContent = new Date(response.end_time * 1000).toLocaleDateString();
+                // taskEndtimeText.textContent = ("" + new Date(response.end_time).toISOString())
+                // .replace(/^([^T]+)T(.+)$/,'$1')
+                // .replace(/^(\d+)-(\d+)-(\d+)$/,'$3.$2.$1');
 
           }).catch(
               error => console.error(error)
@@ -295,6 +396,7 @@ modalAddTaskButton.onclick = function () {
           return response.json()  
       }).then(
           response => {
+            console.log(response);
             serverID = response.id;
             taskBlock.setAttribute('id', response.id);
             taskNameText.setAttribute('id', response.id);
@@ -305,9 +407,13 @@ modalAddTaskButton.onclick = function () {
             deleteButton.setAttribute('id', response.id);
             taskNameText.textContent = response.task_title;
             taskDescriptionText.textContent = response.task_desc;
-            taskEndtimeText.textContent = ("" + new Date(response.end_time * 1000).toISOString())
-            .replace(/^([^T]+)T(.+)$/,'$1')
-            .replace(/^(\d+)-(\d+)-(\d+)$/,'$3.$2.$1');
+            taskEndtimeText.textContent = new Date(response.end_time * 1000).toLocaleDateString();
+            if (response.is_done === false && response.end_time < nowManyNumbers / 1000) {
+              taskBlock.style.backgroundColor ='Red';
+            }
+            // taskEndtimeText.textContent = ("" + new Date(response.end_time * 1000).toISOString())
+            // .replace(/^([^T]+)T(.+)$/,'$1')
+            // .replace(/^(\d+)-(\d+)-(\d+)$/,'$3.$2.$1');
       }).catch(
           error => console.error(error)
         )
