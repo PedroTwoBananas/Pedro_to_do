@@ -35,6 +35,27 @@ body {
     border-radius: 5px;
     border-bottom: solid 4px rgb(146, 142, 142);
 }
+.egg-modal {
+  display: none; 
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: hidden; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+.egg {
+
+  margin-top: 10px;
+  outline: none;
+  overflow: auto;
+  resize: none;
+  height: 96%;
+  margin-left: 350px;
+}
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
@@ -151,34 +172,74 @@ body {
   border-bottom-style: inset
 }
 .task-list {
-  margin: 10px; 
+  margin: 30px; 
 }
 .task-block {
+  border: 2px solid grey;
+  border-radius: 5px;
+  margin-top: 10px;
   margin-bottom: 10px;
   display: flex;
   flex-direction: row;
 }
-.table-task {
-  border: 1px solid grey;
+.task-title-text {
+  display: flex;
+  align-items: center;
+  width: 20%;
+  padding-left: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-right: 2px solid grey;
+}
+.task-description-text {
+  display: flex;
+  align-items: center;
+  width: 40%;
+  padding-left: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-right: 2px solid grey;
+}
+.task-endtime-text {
+  display: flex;
+  align-items: center;
+  width: 10%;
+  padding-left: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-right: 2px solid grey;
+}
+.buttons-block {
+  display: flex;
+  flex-direction: row;
+  /* justify-items: center; */
+  align-items: center;
   
 }
-td {
-  border: 1px solid grey;
-  padding-top: 12px;
-  padding-bottom: 12px;
-  
+.done-button {
+  height: 24px;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-weight: bold;
+  border-radius: 5px;
+  border-bottom: solid 4px rgb(146, 142, 142);
+  border-bottom-style: inset;
+  margin-left: 10px;
 }
-.task-text{
-  padding-left: 20px;
-  padding-right: 50px;
+.edit-button {
+  height: 24px;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-weight: bold;
+  border-radius: 5px;
+  border-bottom: solid 4px rgb(146, 142, 142);
+  border-bottom-style: inset;
+  margin-left: 10px;
 }
-.task-description {
-  padding-left: 20px;
-  padding-right: 100px;
-}
-.task-time {
-  text-align: center;
-}
-.task-edit {
-  text-align: center;
+.delete-button {
+  height: 24px;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-weight: bold;
+  border-radius: 5px;
+  border-bottom: solid 4px rgb(146, 142, 142);
+  border-bottom-style: inset;
+  margin-left: 10px;
 }

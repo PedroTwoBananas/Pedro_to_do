@@ -7,10 +7,10 @@ email.addEventListener('input', inputEmail);
 function inputEmail(e) {
     const input_em = e.target.value;
     if (input_em && re.test(input_em)) {
-        email.style.background = 'green';
+        email.style.backgroundColor = 'green';
         isValidEmail = true;
     } else if (input_em && !re.test(input_em)) {
-        email.style.background = 'red';
+        email.style.backgroundColor = 'red';
         isValidEmail = false;
       } else {
         email.style.background = 'white';
