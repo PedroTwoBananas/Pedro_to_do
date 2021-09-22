@@ -1,31 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+    <link rel="stylesheet" href="log.css">
 <head>
     <meta charset="UTF-8">
     <title>Авторизация</title>
 </head>
 <body>
     <div class = "login-section">
-        <h2 class = "login-title">Авторизация</h2>
-        <form class = "login-form" novalidate>
-            
-            <input class = "email" type="email">
-            <span class = "email-title">Email</span>
-            <div class = "pop-up-email">
-                <span class = "update-email"></span>
-            </div>
-            
-            <input class = "password" type="password">
-            <span class = "password-title">Пароль</span>
-            <input class = "show-password" type = "checkbox">
-            <div class = "pop-up-password">
-              <span class = "update-password"></span>
-            </div>
-            <input class = "login-button" type="button" value = "Войти">
-        </form>
-        <a href = "../index.html">На Главную</a>
-        <a href = "../reg/reg.html">Зарегистрироваться</a>
-        <script src = "log.js"></script>
+        <div class = 'log-header'>
+            <h2 class = "login-title">Авторизация</h2>
         </div>
+        <div class = 'log-body'>
+            <form class = "login-form" novalidate>
+                <input class = "email" type="email">
+                <span class = "email-title">Email</span>
+                <div class = "pop-up-email">
+                    <span class = "update-email"></span>
+                </div>
+                <input class = "password" type="password">
+                <span class = "password-title">Пароль</span>
+                <input class = "show-password" type = "checkbox">
+                <div class = "pop-up-password">
+                  <span class = "update-password"></span>
+                </div>
+                <input class = "login-button" type="button" value = "Войти">
+            </form>
+        </div>
+        <div class = 'log-footer'>
+            <a href = "../index.html"><button class = 'to-main-button'>На Главную</button></a>
+            <a href = "../reg/reg.html"><button class = 'to-reg-button'>Зарегистрироваться</button></a>
+        </div>
+        </div>
+        <script src = "log.js"></script>
 </body>
 </html>

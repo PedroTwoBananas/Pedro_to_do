@@ -1,0 +1,80 @@
+* {
+    box-sizing: border-box;
+}
+body {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight: bold;
+    
+}
+.login-section {
+    margin-top: 150px;
+    margin-left: 500px;
+    margin-right: 500px;
+    padding-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: solid 2px rgb(146, 142, 142);
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    border-radius: 5px;
+    width: 30%;
+}
+.log-header {
+    border-bottom: solid 2px rgb(146, 142, 142);
+    margin-bottom: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+}
+.email {
+    margin-bottom: 10px;
+    border: solid 2px rgb(146, 142, 142);
+}
+.email-green {
+    margin-bottom: 10px;
+    border: solid 2px green;
+}
+.email-red {
+    margin-bottom: 10px;
+    border: solid 2px red;
+}
+.password {
+    margin-bottom: 10px;
+}
+.log-body {
+    margin-bottom: 10px;
+    
+}
+.login-button {
+    width: 150px;
+    height: 30px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-weight: bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    border-radius: 5px;
+}
+.log-footer {
+  margin-top: 30px;
+}
+.to-main-button {
+    width: 150px;
+    height: 30px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-weight: bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    border-radius: 5px;
+    border-bottom: solid 4px rgb(146, 142, 142);
+}
+.to-reg-button {
+    width: 150px;
+    height: 30px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-weight: bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    border-radius: 5px;
+    border-bottom: solid 4px rgb(146, 142, 142);
+}

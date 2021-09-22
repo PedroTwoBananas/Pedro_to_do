@@ -24,7 +24,9 @@ logOutButton.onclick = function () {
 
 let serverArray;
 
+
 const host = 'https://apipedrotodo.herokuapp.com';
+
 
 fetch(host + '/api/getTasks', {
     headers: {
@@ -45,22 +47,30 @@ fetch(host + '/api/getTasks', {
       // };
     
       const taskNameText = document.createElement('span');
+      taskNameText.classList.add('task-title-text');
       taskNameText.setAttribute('id', serverArray[i].id);
     
       taskBlock.append(taskNameText);
 
       const taskDescriptionText = document.createElement('span');
+      taskDescriptionText.classList.add('task-description-text');
       taskDescriptionText.setAttribute('id', serverArray[i].id);
     
       taskBlock.append(taskDescriptionText);
 
       const taskEndtimeText = document.createElement('span');
+      taskEndtimeText.classList.add('task-endtime-text');
       taskEndtimeText.setAttribute('id', serverArray[i].id);
       let endtimeDate = taskEndtime.value;
       let manyNumbers = new Date(endtimeDate);
       taskBlock.append(taskEndtimeText);
 
+      const buttonsBlock = document.createElement('div');
+      buttonsBlock.classList.add('buttons-block');
+      taskBlock.append(buttonsBlock);
+
       const doneButton = document.createElement('button');
+      doneButton.classList.add('done-button');
       doneButton.setAttribute('id', serverArray[i].id);
       doneButton.textContent = 'Готово';
       doneButton.onclick = function () {
@@ -89,24 +99,25 @@ fetch(host + '/api/getTasks', {
           }).then(response => {
             if (response.is_done === true && response.end_time < nowManyNumbers / 1000) {
               taskBlock.style.backgroundColor ='Yellow';
-                  taskBlock.removeChild(doneButton);
-                  taskBlock.removeChild(editButton);
+              buttonsBlock.removeChild(doneButton);
+              buttonsBlock.removeChild(editButton);
             } else {
               taskBlock.style.backgroundColor ='SpringGreen';
-                  taskBlock.removeChild(doneButton);
-                  taskBlock.removeChild(editButton);
+              buttonsBlock.removeChild(doneButton);
+              buttonsBlock.removeChild(editButton);
             };
   
           }).catch(
               error => console.error(error)
             )
       }
-      taskBlock.append(doneButton);
+      buttonsBlock.append(doneButton);
 
       const editButton = document.createElement('button');
+      editButton.classList.add('edit-button');
       editButton.setAttribute('id', serverArray[i].id);
       editButton.textContent = 'Редактировать';
-      taskBlock.append(editButton);
+      buttonsBlock.append(editButton);
       editButton.onclick = function () {
         modalEdit.style.display = "block";
         
@@ -152,6 +163,12 @@ fetch(host + '/api/getTasks', {
                   taskDescriptionText.textContent = response.task_desc;
                   // taskEndtimeText.textContent = response.end_time;
                   taskEndtimeText.textContent = new Date(response.end_time * 1000).toLocaleDateString();
+                  if (response.is_done === false && response.end_time > nowManyNumbers / 1000) {
+                    taskBlock.style.backgroundColor ='White';
+                  } else if (response.is_done === false && response.end_time < nowManyNumbers / 1000) {
+                    taskBlock.style.backgroundColor ='Red';
+                    buttonsBlock.removeChild(editButton); 
+                  }
                   // taskEndtimeText.textContent = ("" + new Date(response.end_time * 1000).toISOString())
                   // .replace(/^([^T]+)T(.+)$/,'$1')
                   // .replace(/^(\d+)-(\d+)-(\d+)$/,'$3.$2.$1');
@@ -159,13 +176,15 @@ fetch(host + '/api/getTasks', {
             }).catch(
                 error => console.error(error)
               )
+              modalEdit.style.display = "none";
         };
       };
 
       const deleteButton = document.createElement('button');
+      deleteButton.classList.add('delete-button');
       deleteButton.setAttribute('id', serverArray[i].id);
       deleteButton.textContent = 'Удалить';
-      taskBlock.append(deleteButton);
+      buttonsBlock.append(deleteButton);
       deleteButton.onclick = function () {
         console.log('delete');
         fetch(host + '/api/deleteTask?id=' + serverArray[i].id, {
@@ -195,14 +214,15 @@ fetch(host + '/api/getTasks', {
 
       if (serverArray[i].is_done === false && serverArray[i].end_time < nowManyNumbers / 1000) {
         taskBlock.style.backgroundColor ='Red';
+        buttonsBlock.removeChild(editButton);
       } else if (serverArray[i].is_done === true && serverArray[i].end_time < nowManyNumbers / 1000) {
         taskBlock.style.backgroundColor ='Yellow';
-            taskBlock.removeChild(doneButton);
-            taskBlock.removeChild(editButton);
+        buttonsBlock.removeChild(doneButton);
+        buttonsBlock.removeChild(editButton);
       } else if (serverArray[i].is_done === true) {
         taskBlock.style.backgroundColor ='SpringGreen';
-            taskBlock.removeChild(doneButton);
-            taskBlock.removeChild(editButton);
+        buttonsBlock.removeChild(doneButton);
+        buttonsBlock.removeChild(editButton);
       };
     }
 }
@@ -215,6 +235,7 @@ fetch(host + '/api/getTasks', {
 
 const modal = document.querySelector('.modal'); // модальное окно при создании задачи
 const modalEditTaskButton = document.querySelector(".modal-edit-task-button"); // модальная кнопка редактирования задачи
+modalEditTaskButton.classList.add('modal-add-task-button');
 const addTaskButton = document.querySelector(".add-task-button"); // кнопка, вызывающее модальное окно добавления задачи
 addTaskButton.onclick = function() {
     modal.style.display = "block";
@@ -233,12 +254,15 @@ modalAddTaskButton.onclick = function () {
     taskList.append(taskBlock);
     
     const taskNameText = document.createElement('span');
+    taskNameText.classList.add('task-title-text');
     taskBlock.append(taskNameText);
 
     const taskDescriptionText = document.createElement('span');
+    taskDescriptionText.classList.add('task-description-text');
     taskBlock.append(taskDescriptionText);
 
     const taskEndtimeText = document.createElement('span');
+    taskEndtimeText.classList.add('task-endtime-text');
     
     let endtimeDate = taskEndtime.value;
     console.log(endtimeDate);
@@ -247,7 +271,12 @@ modalAddTaskButton.onclick = function () {
     
     taskBlock.append(taskEndtimeText);
 
+    const buttonsBlock = document.createElement('div');
+    buttonsBlock.classList.add('buttons-block');
+    taskBlock.append(buttonsBlock);
+
     const doneButton = document.createElement('button');
+    doneButton.classList.add('done-button');
     doneButton.textContent = 'Готово';
     doneButton.onclick = function () {
       let time = taskEndtimeText.textContent;
@@ -279,24 +308,24 @@ modalAddTaskButton.onclick = function () {
           // taskBlock.removeChild(editButton);
           if (response.is_done === true && response.end_time < nowManyNumbers / 1000) {
             taskBlock.style.backgroundColor ='Yellow';
-                taskBlock.removeChild(doneButton);
-                taskBlock.removeChild(editButton);
+            buttonsBlock.removeChild(doneButton);
+            buttonsBlock.removeChild(editButton);
           } else {
             taskBlock.style.backgroundColor ='SpringGreen';
-                taskBlock.removeChild(doneButton);
-                taskBlock.removeChild(editButton);
+            buttonsBlock.removeChild(doneButton);
+            buttonsBlock.removeChild(editButton);
           };
 
         }).catch(
             error => console.error(error)
           )
     }
-    taskBlock.append(doneButton);
+    buttonsBlock.append(doneButton);
 
     const editButton = document.createElement('button');
-    
+    editButton.classList.add('edit-button');
     editButton.textContent = 'Редактировать';
-    taskBlock.append(editButton);
+    buttonsBlock.append(editButton);
     editButton.onclick = function () {
       modalEdit.style.display = "block";
       
@@ -344,6 +373,12 @@ modalAddTaskButton.onclick = function () {
                 taskDescriptionText.textContent = response.task_desc;
                 // taskEndtimeText.textContent = response.end_time;
                 taskEndtimeText.textContent = new Date(response.end_time * 1000).toLocaleDateString();
+                if (response.is_done === false && response.end_time > nowManyNumbers / 1000) {
+                  taskBlock.style.backgroundColor ='White';
+                } else if (response.is_done === false && response.end_time < nowManyNumbers / 1000) {
+                  taskBlock.style.backgroundColor ='Red';
+                  buttonsBlock.removeChild(editButton); 
+                }
                 // taskEndtimeText.textContent = ("" + new Date(response.end_time).toISOString())
                 // .replace(/^([^T]+)T(.+)$/,'$1')
                 // .replace(/^(\d+)-(\d+)-(\d+)$/,'$3.$2.$1');
@@ -351,13 +386,14 @@ modalAddTaskButton.onclick = function () {
           }).catch(
               error => console.error(error)
             )
+            modalEdit.style.display = "none";
       };
     };
 
     const deleteButton = document.createElement('button');
-    
+    deleteButton.classList.add('delete-button');
     deleteButton.textContent = 'Удалить';
-    taskBlock.append(deleteButton);
+    buttonsBlock.append(deleteButton);
     deleteButton.onclick = function () {
         fetch(host + '/api/deleteTask?id=' + serverID, {
             method: 'DELETE',
@@ -410,7 +446,27 @@ modalAddTaskButton.onclick = function () {
             taskEndtimeText.textContent = new Date(response.end_time * 1000).toLocaleDateString();
             if (response.is_done === false && response.end_time < nowManyNumbers / 1000) {
               taskBlock.style.backgroundColor ='Red';
+              buttonsBlock.removeChild(editButton);
             }
+            if (response.task_title === 'центральный' && response.task_desc === 'процессор') {
+              const eggModal = document.querySelector('.egg-modal');
+              const eggJoke = document.querySelector('.egg');
+
+              fetch(host + '/theEggOfTruth', {
+              headers: {
+                'Authorization' : 'Bearer ' + JSON.parse(localStorage['log_user_name']).access_token,
+                'EGG' : 'true'
+              }
+              }).then(response => response.json())
+              .then((response) => {
+                eggJoke.textContent = response;
+                eggModal.style.display = 'block';
+                setTimeout(() => eggModal.style.display = 'none', 10000);
+              
+              })
+              .catch(error => console.error(error))
+            }
+            
             // taskEndtimeText.textContent = ("" + new Date(response.end_time * 1000).toISOString())
             // .replace(/^([^T]+)T(.+)$/,'$1')
             // .replace(/^(\d+)-(\d+)-(\d+)$/,'$3.$2.$1');
@@ -448,6 +504,7 @@ const editTaskEndtime = document.querySelector('.edit-task-endtime'); // пол�
 
 
 const modalEditCanselTaskButton = document.querySelector(".modal-edit-cancel-task-button"); // модальная кнопка редактирования "отменить"
+modalEditCanselTaskButton.classList.add('modal-cancel-task-button');
 
 modalEditCanselTaskButton.onclick = function () {
     modalEdit.style.display = "none";
